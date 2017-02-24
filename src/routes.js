@@ -1,10 +1,9 @@
 import Vue from 'vue';
-import Abstract from './pages/common/abstract';
 import NotFound from './pages/common/404';
 
 // list with filters page
 import ListWithFilters from './pages/list/with-filters';
-import BigForm from './pages/form/big-form';
+import AddActivity from './pages/form/big-form';
 import Login from './pages/login/login';
 
 const root = Vue.component('root', {
@@ -36,32 +35,14 @@ let routes = [
     },
     children: [
       {
-        path: 'list',
-        component: Abstract,
-        name: '列表',
-        iconClass: 'el-icon-message',
-        children: [
-          {
-            path: 'filters',
-            name: '搜索条件',
-            component: ListWithFilters,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
+        path: '',
+        name: '参与用户',
+        component: ListWithFilters
       },
       {
-        path: 'form',
-        component: Abstract,
-        name: '表单',
-        iconClass: 'el-icon-document',
-        children: [
-          {
-            path: 'big-form',
-            name: '简历管理',
-            component: BigForm,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
+        path: 'edit',
+        name: '奖品设置',
+        component: AddActivity
       }
     ]
   },

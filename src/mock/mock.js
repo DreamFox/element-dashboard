@@ -1,7 +1,8 @@
+/* eslint-disable */
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { LoginUsers } from '../resources/user';
-import { Schools } from '../resources/schools';
+import { Award } from '../resources/schools';
 import { WorkDurationOptions } from '../resources/work-durations';
 import { AcademicOptions } from '../resources/academics';
 import UserAPI from './user';
@@ -54,37 +55,20 @@ export default {
       });
     });
 
-    mock.onGet('/schools').reply(config => {
+    mock.onGet('/getAward').reply(config => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          let school_list = JSON.parse(JSON.stringify(Schools));
-          resolve([200, {code: 200, msg: '请求成功!!!', school_list}]);
+          console.log(Award);
+          let list = Award;
+          resolve([200, {code: 200, msg: '请求成功!!!', list}]);
         }, Math.random() * 200 + 50);
       });
     });
 
-    mock.onGet('/work_durations').reply(config => {
+    mock.onPost('/saveActivity').reply(config => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          let workDurationOptions = JSON.parse(JSON.stringify(WorkDurationOptions));
-          resolve([200, {code: 200, msg: '请求成功!!!', workDurationOptions}]);
-        }, Math.random() * 200 + 50);
-      });
-    });
-
-    mock.onGet('/academics').reply(config => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          let academicOptions = JSON.parse(JSON.stringify(AcademicOptions));
-          resolve([200, {code: 200, msg: '请求成功!!!', academicOptions}]);
-        }, Math.random() * 200 + 50);
-      });
-    });
-
-    mock.onPost('/resume').reply(config => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {code: 200, msg: '上传成功', resume_id: Mock.Random.guid()}]);
+          resolve([200, {code: 200, msg: '上传成功', id: Mock.Random.guid()}]);
         }, Math.random() * 200 + 50);
       });
     });

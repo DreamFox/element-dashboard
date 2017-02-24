@@ -12,7 +12,7 @@ Mock.bootstrap();
 
 import App from './app.vue';
 import routes from './routes';
-import './style.scss';
+import './style.less';
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);

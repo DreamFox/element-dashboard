@@ -2,11 +2,10 @@
   <div id="login-page" @keyup.enter="login">
     <div class="login-form">
       <div class="input-group">
-        <div class="title">Element Dashboard</div>
+        <div class="title">登录</div>
         <el-input
           :autofocus="true"
           placeholder="请输入用户名"
-          icon="time"
           v-model="username">
         </el-input>
       </div>
@@ -14,17 +13,8 @@
         <el-input
           placeholder="请输入密码"
           type="password"
-          icon="time"
           v-model="password">
         </el-input>
-      </div>
-      <div class="input-group">
-        <label>记住我？</label>
-        <el-switch
-          v-model="rememberMe"
-          on-text=""
-          off-text="">
-        </el-switch>
       </div>
       <div class="input-group">
         <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
@@ -69,11 +59,7 @@ export default {
           this.$message.error(msg);
         } else {
           localStorage.setItem('user', JSON.stringify(user));
-          if (this.$route.query.redirect) {
-            this.$router.push({path: this.$route.query.redirect});
-          } else {
-            this.$router.push({path: '/list'});
-          }
+          this.$router.push({path: '/'});
         }
       });
     }
@@ -81,15 +67,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
   #login-page {
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #efeeee;
-
+    background: url(../../assets/login.png) no-repeat center top;
+    background-color: #FFD24C;
+    background-size: cover;
     .login-form {
       display: flex;
       flex-direction: column;

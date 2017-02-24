@@ -49,7 +49,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="less">
   .abstract {
     .card-wrapper {
       display: flex;

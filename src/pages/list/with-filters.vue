@@ -17,19 +17,7 @@
             v-model="filters.userName">
           </el-input>
         </div>
-
-        <div class="filter">
-          起止时间：
-          <el-date-picker
-            v-model="filters.startEndTime"
-            type="datetimerange"
-            placeholder="选择时间范围"
-            style="width:350px">
-          </el-date-picker>
-        </div>
-
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
-        <el-button type="primary" @click="createDialog = true">创建</el-button>
       </div>
       <!-- filters end -->
 
@@ -44,9 +32,8 @@
         ref="table"
         style="width: 100%">
         <el-table-column
-          type="selection"
-          :reserve-selection="reserveSelection"
-          width="55">
+          type="index"
+          width="50">
         </el-table-column>
         <el-table-column
           prop="date"
@@ -59,25 +46,35 @@
           label="姓名">
         </el-table-column>
         <el-table-column
-          prop="age"
-          sortable="custom"
-          label="年龄">
+          width="150"
+          prop="mobile"
+          label="手机号">
+        </el-table-column>
+        <el-table-column
+          :context="_self"
+          width="90"
+          inline-template
+          label="头像">
+          <img class="user-img" :src="row.imgUrl" :style="{ width: '48px'}" alt="" />
         </el-table-column>
         <el-table-column
           prop="address"
-          label="地址">
+          label="城市">
+        </el-table-column>
+        <el-table-column
+          prop="ticket"
+          label="优惠券">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="中奖状态">
         </el-table-column>
         <el-table-column
         :context="_self"
-        width="150"
+        width="100"
         inline-template
         label="操作">
         <div>
-          <el-button
-            size="small"
-            @click="handleEdit($index, row)">
-            编辑
-          </el-button>
           <el-button
             size="small"
             type="danger"
@@ -101,19 +98,12 @@
       <!-- pagination end  -->
 
       <!-- edit dialog start -->
-      <el-dialog title="编辑" v-model="editDialog" size="tiny">
+      <el-dialog custom-class="edit-dialog" title="编辑" v-model="editDialog" size="tiny">
         <el-form ref="editForm" :model="editForm" label-width="80px">
-          <el-form-item label="姓名">
-            <el-input v-model="editForm.name" class="el-col-24"></el-input>
+          <el-form-item label="数量">
+            <el-input v-model="editForm.num" class="el-col-24"></el-input>
           </el-form-item>
-          <el-form-item label="活动时间">
-            <el-date-picker
-              class="el-col-24"
-              v-model="editForm.time"
-              type="datetime"
-              placeholder="选择日期时间">
-            </el-date-picker>
-          </el-form-item>
+
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialog = false">取 消</el-button>
@@ -122,36 +112,12 @@
       </el-dialog>
       <!-- edit dialog end -->
 
-      <!-- create dialog start -->
-      <el-dialog title="保存" v-model="createDialog" size="tiny">
-        <el-form ref="createFrom" :model="createForm" label-width="80px">
-          <el-form-item label="姓名">
-            <el-input v-model="createForm.name" class="el-col-24"></el-input>
-          </el-form-item>
-          <el-form-item label="活动时间">
-            <el-date-picker
-              class="el-col-24"
-              v-model="createForm.time"
-              type="datetime"
-              placeholder="选择日期时间">
-            </el-date-picker>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="createDialog = false">取 消</el-button>
-          <el-button type="primary" @click="handleSave()">确 定</el-button>
-        </span>
-      </el-dialog>
-      <!-- create dialog end -->
-    </div>
   </div>
 </template>
 
 <script>
 import {
   fetchList,
-  addUser,
-  removeUser,
   editUser
 } from './../../api/api';
 
@@ -166,7 +132,6 @@ export default {
       page: 0,
       loading: true,
       multipleSelection: [],
-      reserveSelection: false,
       editDialog: false,
       createDialog: false,
       filters: {
@@ -175,9 +140,7 @@ export default {
         startEndTime: ''
       },
       editForm: {
-        id: '',
-        name: '',
-        time: ''
+        num: ''
       },
       createForm: {
         name: '',
@@ -210,34 +173,8 @@ export default {
       });
     },
 
-    handleSave() {
-      addUser(this.createForm).then(() => {
-        this.fetchData();
-        this.createDialog = false;
-
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        });
-      });
-    },
-
-    handleEdit($index, row) {
-      this.editForm.id = row.id;
-      this.editDialog = true;
-    },
-
     handleDelete($index, row) {
-      removeUser({
-        id: row.id
-      }).then(() => {
-        this.fetchData();
-
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      });
+      console.log('delete');
     },
 
     handleSelectionChange(val) {
@@ -259,15 +196,9 @@ export default {
       // param: page
       this.page = page || this.page;
 
-      // param: start time and end end time
-      let startTime = this.filters.startEndTime ? this.filters.startEndTime[0].getTime() : '';
-      let endTime = this.filters.startEndTime ? this.filters.startEndTime[1].getTime() : '';
-
       let options = {
         page: this.page,
         userName: this.filters.userName,
-        startTime: startTime,
-        endTime: endTime,
         sortWay: sortWay
       };
 
@@ -293,8 +224,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="less">
 #ListWithFiltersPage {
+  .edit-dialog {
+      .el-dialog__body {
+        overflow: auto;
+      }
+  }
+  .db-content-inner .user-img {
+    width: 100px;
+  }
   .filters {
     margin: 0 0 20px 0;
     border: 1px #efefef solid;
@@ -307,7 +246,6 @@ export default {
       padding: 10px;
       border-radius: 5px;
     }
-
     .el-input {
       width: 150px;
       display: inline-block;
